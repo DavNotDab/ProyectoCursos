@@ -1,0 +1,171 @@
+<?php
+namespace Models;
+
+use Lib\BaseDatos;
+use PDOException;
+
+class Usuario
+{
+    private string $id;
+    private string $nombre;
+    private string $apellidos;
+    private string $email;
+    private string $password;
+    private string $rol;
+    private bool $confirmado;
+    private string $token;
+    private BaseDatos $bd;
+
+    public function __construct()
+    {
+        $this->bd = new BaseDatos();
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getNombre(): string
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(string $nombre): void
+    {
+        $this->nombre = $nombre;
+    }
+
+    public function getApellidos(): string
+    {
+        return $this->apellidos;
+    }
+
+    public function setApellidos(string $apellidos): void
+    {
+        $this->apellidos = $apellidos;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getRol(): string
+    {
+        return $this->rol;
+    }
+
+    public function setRol(string $rol): void
+    {
+        $this->rol = $rol;
+    }
+
+    public function getConfirmado(): bool
+    {
+        return $this->confirmado;
+    }
+
+    public function setConfirmado(bool $confirmado): void
+    {
+        $this->confirmado = $confirmado;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
+    }
+
+    public function getAll(): array {
+        $sql = "SELECT * FROM usuarios";
+        $this->bd->consulta($sql);
+        return $this->bd->extraer_todos();
+    }
+
+    public function getUser($id): array|false {
+        $sql = "SELECT * FROM usuarios WHERE id = $id";
+        $this->bd->consulta($sql);
+        return $this->bd->extraer_registro();
+    }
+
+    public function getUserByEmail($email): array|false {
+        $sql = "SELECT * FROM usuarios WHERE email = '$email'";
+        $this->bd->consulta($sql);
+        return $this->bd->extraer_registro();
+    }
+
+    public function register(): bool {
+        try {
+            $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol, confirmado) VALUES ('$this->nombre', '$this->apellidos', '$this->email', '$this->password', '$this->rol', '$this->confirmado')";
+            $this->bd->consulta($sql);
+            return $this->bd->filasAfectadas() > 0;
+
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    public function login($email): bool|array {
+        $sql = "SELECT id, password FROM usuarios WHERE email = '$email'";
+        $this->bd->consulta($sql);
+        if ($this->bd->filasAfectadas() > 0) {
+            return $this->bd->extraer_todos()[0];
+        }
+        return false;
+    }
+
+    public function updateToken($exp): bool
+    {
+        $sql = "UPDATE usuarios SET token = '$this->token' WHERE email = '$this->email'";
+        $this->bd->consulta($sql);
+        $sql = "UPDATE usuarios SET token_exp = '$exp' WHERE email = '$this->email'";
+        $this->bd->consulta($sql);
+        return $this->bd->filasAfectadas() > 0;
+    }
+
+    public function validarData(mixed $data): bool
+    {
+        if (isset($data->nombre) && isset($data->apellidos) && isset($data->email) && isset($data->password)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public function validarLogin(mixed $data): bool
+    {
+        if (isset($data->email) && isset($data->password)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+}
