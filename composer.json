@@ -1,0 +1,24 @@
+{
+    "name": "david/proyecto-cursos",
+    "autoload": {
+        "psr-4": {
+            "David\\ProyectoCursos\\": "src/",
+            "MVC\\" : "./",
+            "Controllers\\" : "./Controllers/",
+            "Models\\" : "./Models/",
+            "Lib\\" : "./Lib/"
+        }
+    },
+    "authors": [
+        {
+            "name": "David Ballesteros Ortiz",
+            "email": "david13ballesteros@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5",
+        "firebase/php-jwt": "^6.3",
+      "ext-pdo": "*",
+        "phpmailer/phpmailer": "^6.7"
+    }
+}
