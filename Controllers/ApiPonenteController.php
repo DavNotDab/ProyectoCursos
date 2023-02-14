@@ -30,7 +30,7 @@ class ApiPonenteController
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $tokenData = Security::validateToken();
-            if ($tokenData !== false && $this->usuario->getUserByEmail($tokenData[0] !== false)) {
+            if ($tokenData !== false && $this->usuario->getUserByEmail($tokenData[0]) !== false) {
 
                 $ponentes = $this->ponente->getAll();
                 $ponenteArr = [];
@@ -62,7 +62,7 @@ class ApiPonenteController
             $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido, use GET"));
         }
 
-        $this->pages->render('read', ['response' => $response->message]);
+        $this->pages->render('read', ['response' => $response]);
     }
 
     public function getPonente($id): void

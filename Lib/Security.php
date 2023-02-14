@@ -4,7 +4,6 @@ namespace Lib;
 use Dotenv\Dotenv;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Models\Usuario;
 use PDOException;
 
 class Security {
@@ -12,7 +11,7 @@ class Security {
     final public static function claveSecreta(): string
     {
         $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-        $dotenv->load();
+        $dotenv->safeLoad();
         return $_ENV['SECRET_KEY'];
     }
 
@@ -60,8 +59,7 @@ class Security {
         try {
             $authorizationArr = explode(' ', $headers['Authorization']);
             $token = $authorizationArr[1];
-            $decodeToken = JWT::decode($token, new Key(Security::clavesecreta(), 'HS256'));
-            return $decodeToken;
+            return JWT::decode($token, new Key(Security::clavesecreta(), 'HS256'));
         } catch (PDOException $exception) {
             return $response['message'] = json_encode(ResponseHttp::statusMessage(401, 'Token expirado o invalido'));
         }
