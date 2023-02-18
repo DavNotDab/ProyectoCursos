@@ -55,7 +55,7 @@ class ApiPonenteController
                 }
             }
             else {
-                $response = json_decode(ResponseHttp::statusMessage(401, "No autorizado"));
+                $response = json_decode(ResponseHttp::statusMessage(401, "No autorizado"))->message;
             }
         }
         else {

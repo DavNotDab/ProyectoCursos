@@ -8,6 +8,8 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Lib\Email;
 use Lib\ResponseHttp;
 use Lib\Security;
 use Models\Usuario;
@@ -93,6 +95,10 @@ class ApiUsuarioController
                     $usuario->setConfirmado(false);
 
                     if ($usuario->register()) {
+                        $token = $this->createToken($usuario, $data->email);
+                        $email = new Email($data->email, $token);
+                        $email->sendConfirmation();
+
                         http_response_code(201);
                         $response = json_decode(ResponseHttp::statusMessage(201, "Usuario creado correctamente"));
                     } else {
@@ -111,7 +117,7 @@ class ApiUsuarioController
         }
     }
 
-    public function login(): ?string
+    public function login(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $usuario = new Usuario();
@@ -120,22 +126,16 @@ class ApiUsuarioController
 
             if ($valido === true) {
                 $datos = $usuario->login($data->email);
-                $hash = $datos["password"];
-                if ($hash !== false) {
+                if ($datos !== false && $datos["confirmado"] == 1) {
+                    $hash = $datos["password"];
                     if (password_verify($data->password, $hash)) {
-                        $key = Security::claveSecreta();
-                        $token = Security::crearToken($key, [$data->email]);
-                        $encodedToken = JWT::encode($token, $key, 'HS256');
-                        $usuario->setToken($encodedToken);
-                        $usuario->setEmail($data->email);
-                        $usuario->updateToken($token["exp"]);
+                        $this->createToken($usuario, $data->email);
                         http_response_code(200);
                         $response["message"] = json_decode(ResponseHttp::statusMessage(200, "OK"));
                         $user = $usuario->getUser($datos["id"]);
                         unset($user["password"]);
                         $resultado = ["response" => $response, "user" => $user];
                         $this->pages->render('read', ['response' => json_encode($resultado)]);
-                        return null;
                     }
                     else {
                         http_response_code(401);
@@ -144,8 +144,9 @@ class ApiUsuarioController
                 }
                 else {
                     http_response_code(401);
-                    $response = json_decode(ResponseHttp::statusMessage(400, "El usuario no existe"));
+                    $response = json_decode(ResponseHttp::statusMessage(400, "El usuario no existe o no está confirmado"));
                 }
+
             }
             else {
                 http_response_code(400);
@@ -155,9 +156,41 @@ class ApiUsuarioController
         else {
             $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido. Use POST"));
         }
-
         $this->pages->render('read', ['response' => json_encode($response)]);
-        return null;
+    }
+
+    private function createToken($usuario, $email): string
+    {
+        $key = Security::claveSecreta();
+        $token = Security::crearToken($key, [$email]);
+        $encodedToken = JWT::encode($token, $key, 'HS256');
+        $usuario->setToken($encodedToken);
+        $usuario->setEmail($email);
+        $usuario->updateToken($token["exp"]);
+            return $encodedToken;
+    }
+
+    public function confirmarCuenta($token): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+            $key = Security::claveSecreta();
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            $usuario = new Usuario();
+            $usuario->setEmail($decoded->data[0]);
+            if ($usuario->checkToken($token) === false) {
+                $response = json_decode(ResponseHttp::statusMessage(401, "Token inválido"));
+                $this->pages->render('read', ['response' => json_encode($response)]);
+                return;
+            }
+            $usuario->setConfirmado(true);
+            $usuario->confirmarCuenta();
+            $this->pages->render('confirmarCuenta');
+        }
+        else {
+            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido. Use GET"));
+            $this->pages->render('read', ['response' => json_encode($response)]);
+        }
     }
 
 }

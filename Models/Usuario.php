@@ -131,7 +131,7 @@ class Usuario
     }
 
     public function login($email): bool|array {
-        $sql = "SELECT id, password FROM usuarios WHERE email = '$email'";
+        $sql = "SELECT id, password, confirmado FROM usuarios WHERE email = '$email'";
         $this->bd->consulta($sql);
         if ($this->bd->filasAfectadas() > 0) {
             return $this->bd->extraer_todos()[0];
@@ -146,6 +146,32 @@ class Usuario
         $sql = "UPDATE usuarios SET token_exp = '$exp' WHERE email = '$this->email'";
         $this->bd->consulta($sql);
         return $this->bd->filasAfectadas() > 0;
+    }
+
+    public function confirmarCuenta(): bool
+    {
+        $sql = "UPDATE usuarios SET confirmado = 1 WHERE email = '$this->email'";
+        $this->bd->consulta($sql);
+        return $this->bd->filasAfectadas() > 0;
+    }
+
+    public function getDatabaseToken(): array
+    {
+        $sql = "SELECT token FROM usuarios WHERE email = '$this->email'";
+        $this->bd->consulta($sql);
+        return $this->bd->extraer_registro();
+    }
+
+    public function getDatabaseTokenExp(): bool
+    {
+        $sql = "SELECT token_exp FROM usuarios WHERE email = '$this->email'";
+        $this->bd->consulta($sql);
+        return $this->bd->extraer_todos()[0];
+    }
+
+    public function checkToken($token): bool
+    {
+        return $this->getDatabaseToken()["token"] == $token;
     }
 
     public function validarData(mixed $data): bool

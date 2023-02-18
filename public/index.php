@@ -6,12 +6,13 @@ use Controllers\ApiPonenteController;
 use Controllers\ApiUsuarioController;
 use Dotenv\Dotenv;
 use Lib\Router;
+use Lib\Pages;
 
 $dotenv = Dotenv::createImmutable(__DIR__); // Accede al archivo .env
 $dotenv->safeLoad();
 
-Router::add('GET', 'prueba', function () {
-    echo 'Hola mundo';
+Router::add('GET', '/', function () {
+    (new Pages())->render('index.php');
 });
 
 Router::add('GET', 'ponente', function () {
@@ -26,7 +27,7 @@ Router::add('DELETE', 'ponente/:id', function ($id) {
     (new ApiPonenteController())->deletePonente($id);
 });
 
-Router::add('POST', 'ponente/new', function () {
+Router::add('GET', 'ponente/new', function () {
     (new ApiPonenteController())->newPonente();
 });
 
@@ -42,6 +43,10 @@ Router::add('POST', 'usuarios/register', function () {
 
 Router::add('POST', 'usuarios/login', function () {
     (new ApiUsuarioController())->login();
+});
+
+Router::add('GET', 'confirmarCuenta/:id', function ($token) {
+    (new ApiUsuarioController())->confirmarCuenta($token);
 });
 
 Router::dispatch();

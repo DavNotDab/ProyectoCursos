@@ -24,12 +24,16 @@ class Router {
         $action = trim($action, '/');
 
         $param = null;
-        preg_match('/[0-9]+$/', $action, $match);
+        //preg_match('/[0-9]+$/', $action, $match);
+        preg_match('/\/[a-z0-9A-Z.\-]+$/', $action, $match);
 
         if(!empty($match)){
 
             $param = $match[0];
-            $action=preg_replace('/'.$match[0].'/',':id',$action);//quitamos la primera parte que se repite siempre (clinicarouter)
+            $param =preg_replace("/\//",'',$param);
+            $action=preg_replace('/'.$param.'/',':id',$action);
+            //$action=preg_replace('/'.$match[0].'/',':id',$action);
+
         }
 
         $fn = self::$routes[$method][$action] ?? null;
