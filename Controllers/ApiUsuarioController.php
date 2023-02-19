@@ -100,7 +100,7 @@ class ApiUsuarioController
                         $email->sendConfirmation();
 
                         http_response_code(201);
-                        $response = json_decode(ResponseHttp::statusMessage(201, "Usuario creado correctamente"));
+                        $response = json_decode(ResponseHttp::statusMessage(201, "Usuario creado correctamente. Confirme su email para poder iniciar sesión"));
                     } else {
                         http_response_code(503);
                         $response = json_decode(ResponseHttp::statusMessage(503, "Error al crear el usuario"));
@@ -173,7 +173,6 @@ class ApiUsuarioController
     public function confirmarCuenta($token): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-
             $key = Security::claveSecreta();
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
             $usuario = new Usuario();

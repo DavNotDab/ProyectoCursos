@@ -27,7 +27,7 @@ Router::add('DELETE', 'ponente/:id', function ($id) {
     (new ApiPonenteController())->deletePonente($id);
 });
 
-Router::add('GET', 'ponente/new', function () {
+Router::add('POST', 'ponente/new', function () {
     (new ApiPonenteController())->newPonente();
 });
 

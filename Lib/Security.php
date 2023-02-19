@@ -2,8 +2,10 @@
 namespace Lib;
 
 use Dotenv\Dotenv;
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use http\Message;
 use PDOException;
 
 class Security {
@@ -65,11 +67,16 @@ class Security {
         }
     }
 
-    final public static function validateToken(): bool|array
+    final public static function validateToken(): bool|array|object
     {
-        $info = self::getToken();
+        try {
+            $info = self::getToken();
+            return $info->data ?? false;
+        }
+        catch (Exception) {
+            return json_decode(ResponseHttp::statusMessage(401, 'Token expirado o invalido'));
+        }
 
-        return $info->data ?? false;
 
 
 

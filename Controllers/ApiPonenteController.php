@@ -30,7 +30,10 @@ class ApiPonenteController
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $tokenData = Security::validateToken();
-            if ($tokenData !== false && $this->usuario->getUserByEmail($tokenData[0]) !== false) {
+            if (gettype($tokenData) == "object") {
+                $response = $tokenData->message;
+            }
+            else if ($tokenData !== false && $this->usuario->getUserByEmail($tokenData[0]) !== false) {
 
                 $ponentes = $this->ponente->getAll();
                 $ponenteArr = [];
