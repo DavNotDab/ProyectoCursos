@@ -19,6 +19,7 @@
         "vlucas/phpdotenv": "^5.5",
         "firebase/php-jwt": "^6.3",
       "ext-pdo": "*",
-        "phpmailer/phpmailer": "^6.7"
+        "phpmailer/phpmailer": "^6.7",
+        "unsplash/unsplash": "^3.2"
     }
 }

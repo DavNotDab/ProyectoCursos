@@ -1,0 +1,23 @@
+{
+  "name": "proyectocursos",
+  "version": "1.0.0",
+  "description": "PHP proyect emulating a website offering cooking courses",
+  "main": "views/index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavNotDab/ProyectoCursos.git"
+  },
+  "author": "David Ballesteros Ortiz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DavNotDab/ProyectoCursos/issues"
+  },
+  "homepage": "https://github.com/DavNotDab/ProyectoCursos#readme",
+  "dependencies": {
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3"
+  }
+}

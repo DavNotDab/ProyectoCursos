@@ -12,7 +12,7 @@ $dotenv = Dotenv::createImmutable(__DIR__); // Accede al archivo .env
 $dotenv->safeLoad();
 
 Router::add('GET', '/', function () {
-    (new Pages())->render('index.php');
+    (new Pages())->render('index');
 });
 
 Router::add('GET', 'ponente', function () {
