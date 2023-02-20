@@ -1,3 +1,3 @@
 # ProyectoCursos
 
-PHP proyect emulating a website offering cooking courses
+PHP project emulating a website offering cooking courses
