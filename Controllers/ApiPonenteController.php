@@ -8,64 +8,35 @@ header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
 use Lib\ResponseHttp;
-use Lib\Security;
 use Models\Ponente;
-use Models\Usuario;
 use Lib\Pages;
 
 class ApiPonenteController
 {
     private Ponente $ponente;
-    private Usuario $usuario;
     private Pages $pages;
 
     public function __construct()
     {
         $this->ponente = new Ponente();
-        $this->usuario = new Usuario();
         $this->pages = new Pages();
     }
 
     public function getAll(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $tokenData = Security::validateToken();
-            if (gettype($tokenData) == "object") {
-                $response = $tokenData->message;
-            }
-            else if ($tokenData !== false && $this->usuario->getUserByEmail($tokenData[0]) !== false) {
+            $ponentes = $this->ponente->getAll();
 
-                $ponentes = $this->ponente->getAll();
-                $ponenteArr = [];
-
-                if (!empty($ponentes)) {
-                    $ponenteArr["message"] = json_decode(ResponseHttp::statusMessage(202, "OK"));
-                    $ponenteArr["ponentes"] = [];
-                    foreach ($ponentes as $ponente) {
-                        $ponenteArr["ponentes"][] = $ponente;
-                    }
-                }
-                else {
-                    $ponenteArr["message"] = json_decode(ResponseHttp::statusMessage(404, "No se encontraron ponentes"));
-                    $ponenteArr["ponentes"] = [];
-                }
-
-                if ($ponenteArr == []) {
-                    $response = json_encode($ponenteArr["message"]);
-                }
-                else {
-                    $response = json_encode($ponenteArr);
-                }
+            if (!empty($ponentes)) {
+                echo json_encode($ponentes);
             }
             else {
-                $response = json_decode(ResponseHttp::statusMessage(401, "No autorizado"))->message;
+                echo ResponseHttp::statusMessage(404, "No se encontraron ponentes");
             }
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido, use GET"));
+            echo ResponseHttp::statusMessage(405, "Método no permitido, use GET");
         }
-
-        $this->pages->render('read', ['response' => $response]);
     }
 
     public function getPonente($id): void
@@ -74,18 +45,16 @@ class ApiPonenteController
             $ponente = $this->ponente->getPonente($id);
 
             if ($ponente !== false) {
-                $response["message"] = json_decode(ResponseHttp::statusMessage(202, "OK"));
-                $response["ponente"] = $ponente;
+                echo json_encode($ponente);
             }
             else {
-                $response["message"] = json_decode(ResponseHttp::statusMessage(404, "No se encontró el ponente"));
+                echo ResponseHttp::statusMessage(404, "No se encontró el ponente");
             }
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido, use GET"));
+            echo ResponseHttp::statusMessage(405, "Método no permitido, use GET");
         }
 
-        $this->pages->render('read', ['response' => json_encode($response)]);
     }
 
     public function deletePonente($id): void

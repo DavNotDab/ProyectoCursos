@@ -4,18 +4,19 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Controllers\ApiPonenteController;
 use Controllers\ApiUsuarioController;
+use Controllers\CursoController;
+use Controllers\TallerController;
 use Dotenv\Dotenv;
 use Lib\Router;
-use Lib\Pages;
 
 $dotenv = Dotenv::createImmutable(__DIR__); // Accede al archivo .env
 $dotenv->safeLoad();
 
 Router::add('GET', '/', function () {
-    (new Pages())->render('index');
+    (new CursoController())->index();
 });
 
-Router::add('GET', 'ponente', function () {
+Router::add('GET', 'ponentes', function () {
     (new ApiPonenteController())->getAll();
 });
 
@@ -47,6 +48,18 @@ Router::add('POST', 'usuarios/login', function () {
 
 Router::add('GET', 'confirmarCuenta/:id', function ($token) {
     (new ApiUsuarioController())->confirmarCuenta($token);
+});
+
+Router::add('GET', 'cursos', function () {
+    (new CursoController())->getAll();
+});
+
+Router::add('GET', 'talleres', function () {
+    (new TallerController())->getAll();
+});
+
+Router::add('POST', 'curso/inscibir', function () {
+    (new CursoController())->inscribir();
 });
 
 Router::dispatch();

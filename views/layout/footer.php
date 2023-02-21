@@ -1,39 +1,19 @@
 
-<footer>
 
+<div class="container">
+    <footer class="py-3 my-4">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+            <li class="nav-item"><a href="#cursos" class="nav-link px-2 text-muted">Cursos</a></li>
+            <li class="nav-item"><a href="#talleres" class="nav-link px-2 text-muted">Talleres</a></li>
+            <li class="nav-item"><a href="#ponentes" class="nav-link px-2 text-muted">Ponentes</a></li>
+            <li class="nav-item"><a href="#about" class="nav-link px-2 text-muted">Acerca de</a></li>
+        </ul>
+        <p class="text-center text-muted">&copy; 2023 David Ballesteros Ortiz</p>
+    </footer>
+</div>
 
-
-</footer>
-
-<script>
-
-    async function getNewImages(query, longitud) {
-        let requestUrl = "https://api.unsplash.com/search/photos?query=" + query + "&client_id=uIvacdZyO4OEOUMdgEWRi5rlB-OLx6OKOHIfeRBH2KU";
-        return fetch(requestUrl)
-            .then((response) => response.json())
-            .then((data) => {
-                return data.results.sort(() => .5 - Math.random()).slice(0, longitud);
-            });
-    }
-
-    function getImages(imagenes, query) {
-        getNewImages(query, imagenes.length).then((images) => {
-            for (let i = 0; i < images.length; i++) {
-                imagenes[i].src = images[i].urls.raw + "&fit=crop&w=400&h=300";
-            }
-        });
-    }
-
-    window.onload = function() {
-        const cursosImg = document.querySelectorAll('.curso-img');
-        const talleresImg = document.querySelectorAll('.taller-img');
-
-        getImages(cursosImg, "chef");
-        getImages(talleresImg, "food");
-    }
-
-
-</script>
+<script src="../src/scripts/ajax.js"></script>
 
 </body>
 </html>

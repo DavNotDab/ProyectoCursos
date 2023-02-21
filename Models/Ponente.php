@@ -3,7 +3,7 @@ namespace Models;
 
 use Lib\BaseDatos;
 use PDOException;
-use MVC\Utils\Utils;
+use Utils\Utils;
 
 class Ponente
 {

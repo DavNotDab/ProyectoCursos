@@ -1,5 +1,5 @@
 <?php
-namespace MVC\Utils;
+namespace Utils;
 
 use Exception;
 
@@ -9,6 +9,15 @@ class Utils {
         if (isset($_SESSION[$name])) {
             $_SESSION[$name] = null;
             unset($_SESSION[$name]);
+        }
+    }
+
+    public static function isAdmin() : bool {
+        if (!isset($_SESSION["admin"])) {
+            header("Location: /" );
+            return false;
+        } else {
+            return true;
         }
     }
 

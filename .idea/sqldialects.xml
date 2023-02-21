@@ -2,7 +2,9 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/Controllers/ApiPonenteController.php" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Models/Curso.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Models/Ponente.php" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/Models/Taller.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/Models/Usuario.php" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/mysql/creadb.sql" dialect="GenericSQL" />
   </component>

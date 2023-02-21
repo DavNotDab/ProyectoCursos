@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../src/styles/main.scss">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/color/jquery.color-2.2.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" async defer type="module"></script>
     <title>Bienvenido</title>
 </head>
@@ -24,14 +27,14 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
                     <a href="#" class="nav-item nav-link active">Home</a>
-                    <a href="#" class="nav-item nav-link">Cursos</a>
-                    <a href="#" class="nav-item nav-link">Talleres</a>
-                    <a href="#" class="nav-item nav-link">Nuestros Ponentes</a>
-                    <a href="#" class="nav-item nav-link">Acerca de</a>
+                    <a href="#cursos" class="nav-item nav-link">Cursos</a>
+                    <a href="#talleres" class="nav-item nav-link">Talleres</a>
+                    <a href="#ponentes" class="nav-item nav-link">Nuestros Ponentes</a>
+                    <a href="#about" class="nav-item nav-link">Acerca de</a>
                 </div>
                 <div class="navbar-nav ms-auto">
-                    <a href="#" class="nav-item nav-link">Reg&iacute;strate</a>
-                    <a href="#" class="nav-item nav-link">Inicia Sesi&oacute;n</a>
+                    <a href="#register" class="nav-item nav-link">Reg&iacute;strate</a>
+                    <a href="#login" class="nav-item nav-link">Inicia Sesi&oacute;n</a>
                 </div>
             </div>
         </div>
