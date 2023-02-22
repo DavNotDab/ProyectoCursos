@@ -3,6 +3,7 @@ namespace Models;
 
 use Lib\BaseDatos;
 use PDOException;
+use MVC\Utils\Utils;
 
 class Usuario
 {
@@ -176,22 +177,35 @@ class Usuario
 
     public function validarData(mixed $data): bool
     {
-        if (isset($data->nombre) && isset($data->apellidos) && isset($data->email) && isset($data->password)) {
-            return true;
+        $nombre = Utils::validarNombre($data->nombre);
+        $apellidos = Utils::validarNombre($data->apellidos);
+        $email = Utils::validarEmail($data->email);
+        $password = Utils::validarPassword($data->password);
+
+        if ($nombre) {
+            if ($apellidos) {
+                if ($email) {
+                    if ($password) return true;
+                    else return $password;
+                }
+                else return $email;
+            }
+            else return $apellidos;
         }
-        else {
-            return false;
-        }
+        else return $nombre;
     }
 
     public function validarLogin(mixed $data): bool
     {
-        if (isset($data->email) && isset($data->password)) {
-            return true;
+        $email = Utils::validarEmail($data->email);
+        $password = Utils::validarPassword($data->password);
+
+        if ($email) {
+            if ($password) return true;
+            else return $password;
         }
-        else {
-            return false;
-        }
+        else return $email;
     }
+
 
 }

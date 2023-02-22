@@ -131,32 +131,26 @@ class ApiUsuarioController
                     if (password_verify($data->password, $hash)) {
                         $this->createToken($usuario, $data->email);
                         http_response_code(200);
-                        $response["message"] = json_decode(ResponseHttp::statusMessage(200, "OK"));
                         $user = $usuario->getUser($datos["id"]);
                         unset($user["password"]);
-                        $resultado = ["response" => $response, "user" => $user];
-                        $this->pages->render('read', ['response' => json_encode($resultado)]);
+                        echo json_encode($user);
                     }
                     else {
-                        http_response_code(401);
-                        $response = json_decode(ResponseHttp::statusMessage(401, "Contraseña incorrecta"));
+                        echo ResponseHttp::statusMessage(401, "Contraseña incorrecta");
                     }
                 }
                 else {
-                    http_response_code(401);
-                    $response = json_decode(ResponseHttp::statusMessage(400, "El usuario no existe o no está confirmado"));
+                    echo ResponseHttp::statusMessage(400, "El usuario no existe o no está confirmado");
                 }
 
             }
             else {
-                http_response_code(400);
-                $response = json_decode(ResponseHttp::statusMessage(400, "ERROR. $valido"));
+                echo ResponseHttp::statusMessage(400, "ERROR. $valido");
             }
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido. Use POST"));
+            echo ResponseHttp::statusMessage(405, "Método no permitido. Use POST");
         }
-        $this->pages->render('read', ['response' => json_encode($response)]);
     }
 
     private function createToken($usuario, $email): string

@@ -1,8 +1,6 @@
 <?php
 namespace Controllers;
 
-use Utils\Utils;
-
 class TallerController
 {
     public function getAll(): void {

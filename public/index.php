@@ -2,10 +2,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Controllers\ApiPonenteController;
-use Controllers\ApiUsuarioController;
 use Controllers\CursoController;
 use Controllers\TallerController;
+use Controllers\UsuarioController;
+use Controllers\PonenteController;
 use Dotenv\Dotenv;
 use Lib\Router;
 
@@ -17,37 +17,43 @@ Router::add('GET', '/', function () {
 });
 
 Router::add('GET', 'ponentes', function () {
-    (new ApiPonenteController())->getAll();
+    (new PonenteController())->getAll();
 });
 
 Router::add('GET', 'ponente/:id', function ($id) {
-    (new ApiPonenteController())->getPonente($id);
+    (new PonenteController())->getPonente($id);
 });
 
 Router::add('DELETE', 'ponente/:id', function ($id) {
-    (new ApiPonenteController())->deletePonente($id);
+    (new PonenteController())->deletePonente($id);
 });
 
 Router::add('POST', 'ponente/new', function () {
-    (new ApiPonenteController())->newPonente();
+    (new PonenteController())->newPonente();
 });
 
 Router::add('PUT', 'ponente/update/:id', function ($id) {
-    (new ApiPonenteController())->updatePonente($id);
+    (new PonenteController())->updatePonente($id);
 });
 
-Router::add('GET', 'auth', function () {require "../views/auth.php";}); // Solo para pruebas
-
 Router::add('POST', 'usuarios/register', function () {
-    (new ApiUsuarioController())->register();
+    (new UsuarioController())->register();
+});
+
+Router::add('GET', 'usuarios/register', function () {
+    (new UsuarioController())->register();
 });
 
 Router::add('POST', 'usuarios/login', function () {
-    (new ApiUsuarioController())->login();
+    (new UsuarioController())->login();
+});
+
+Router::add('GET', 'usuarios/login', function () {
+    (new UsuarioController())->login();
 });
 
 Router::add('GET', 'confirmarCuenta/:id', function ($token) {
-    (new ApiUsuarioController())->confirmarCuenta($token);
+    (new UsuarioController())->confirmarCuenta($token);
 });
 
 Router::add('GET', 'cursos', function () {
@@ -60,6 +66,10 @@ Router::add('GET', 'talleres', function () {
 
 Router::add('POST', 'curso/inscibir', function () {
     (new CursoController())->inscribir();
+});
+
+Router::add('POST', 'taller/inscibir', function () {
+    (new TallerController())->inscribir();
 });
 
 Router::dispatch();

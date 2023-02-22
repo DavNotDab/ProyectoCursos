@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="../node_modules/bootstrap-icons/font/bootstrap-icons.css">
+<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" async defer type="module"></script>
 
 <main style="padding: 20px">
     <div class="container-fluid" id="home">
@@ -78,5 +81,6 @@
             </button>
         </div>
     </div>
+    <script src="../src/scripts/ajax.js"></script>
 
 </main>

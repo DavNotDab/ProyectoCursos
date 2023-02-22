@@ -3,7 +3,7 @@ namespace Models;
 
 use Lib\BaseDatos;
 use PDOException;
-use Utils\Utils;
+use MVC\Utils\Utils;
 
 
 class Taller

@@ -1,5 +1,5 @@
 <?php
-namespace Utils;
+namespace MVC\Utils;
 
 use Exception;
 
