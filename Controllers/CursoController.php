@@ -2,7 +2,6 @@
 namespace Controllers;
 
 use Lib\Pages;
-use Utils\Utils;
 
 class CursoController
 {
@@ -14,7 +13,7 @@ class CursoController
     }
 
     public function index(): void {
-        $this->pages->render('index', ['title' => 'Cursos']);
+        $this->pages->render('index');
     }
 
     public function getAll(): void {
