@@ -52,6 +52,14 @@ Router::add('GET', 'usuarios/login', function () {
     (new UsuarioController())->login();
 });
 
+Router::add('GET', 'usuarios/logout', function () {
+    (new UsuarioController())->logout();
+});
+
+Router::add('GET', 'usuarios/perfil', function () {
+    (new UsuarioController())->verPerfil();
+});
+
 Router::add('GET', 'confirmarCuenta/:id', function ($token) {
     (new UsuarioController())->confirmarCuenta($token);
 });
@@ -64,11 +72,11 @@ Router::add('GET', 'talleres', function () {
     (new TallerController())->getAll();
 });
 
-Router::add('POST', 'curso/inscibir', function () {
+Router::add('POST', 'curso/inscribir', function () {
     (new CursoController())->inscribir();
 });
 
-Router::add('POST', 'taller/inscibir', function () {
+Router::add('POST', 'taller/inscribir', function () {
     (new TallerController())->inscribir();
 });
 

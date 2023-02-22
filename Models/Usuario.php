@@ -120,14 +120,14 @@ class Usuario
         return $this->bd->extraer_registro();
     }
 
-    public function register(): bool {
+    public function register(): bool|string {
         try {
             $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol, confirmado) VALUES ('$this->nombre', '$this->apellidos', '$this->email', '$this->password', '$this->rol', '$this->confirmado')";
             $this->bd->consulta($sql);
             return $this->bd->filasAfectadas() > 0;
 
         } catch (PDOException $e) {
-            return false;
+            return $e->getMessage();
         }
     }
 
@@ -175,17 +175,38 @@ class Usuario
         return $this->getDatabaseToken()["token"] == $token;
     }
 
-    public function validarData(mixed $data): bool
+    public function createSession(array $user): void
+    {
+        session_start();
+        $_SESSION["user"] = $user;
+    }
+
+    public function destroySession(): void
+    {
+        session_start();
+        if (isset($_SESSION["user"])) {
+            unset($_SESSION["user"]);
+            session_destroy();
+        }
+    }
+
+    public function logout(): void
+    {
+        $this->destroySession();
+        header("Location: http://localhost/ProyectoCursos/public/");
+    }
+
+    public function validarData(object $data): bool
     {
         $nombre = Utils::validarNombre($data->nombre);
         $apellidos = Utils::validarNombre($data->apellidos);
         $email = Utils::validarEmail($data->email);
         $password = Utils::validarPassword($data->password);
 
-        if ($nombre) {
-            if ($apellidos) {
-                if ($email) {
-                    if ($password) return true;
+        if ($nombre === true) {
+            if ($apellidos === true) {
+                if ($email === true) {
+                    if ($password === true) return true;
                     else return $password;
                 }
                 else return $email;

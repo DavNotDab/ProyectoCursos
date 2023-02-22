@@ -2,6 +2,7 @@
 namespace Controllers;
 
 use Lib\Pages;
+use Models\Usuario;
 
 class UsuarioController
 {
@@ -41,8 +42,24 @@ class UsuarioController
         }
     }
 
+    public function logout(): void
+    {
+        (new Usuario())->logout();
+    }
+
     public function confirmarCuenta($token): void {
         (new ApiUsuarioController())->confirmarCuenta($token);
+    }
+
+    public function verPerfil(): void
+    {
+        session_start();
+        if (isset($_SESSION['user'])) {
+            $this->pages->render('usuario/perfil', ['title' => 'Perfil']);
+        }
+        else {
+            header('Location: http://localhost/ProyectoCursos/public/usuarios/login');
+        }
     }
 
 }

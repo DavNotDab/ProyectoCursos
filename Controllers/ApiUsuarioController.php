@@ -13,49 +13,31 @@ use Lib\Email;
 use Lib\ResponseHttp;
 use Lib\Security;
 use Models\Usuario;
-use Lib\Pages;
 
 class ApiUsuarioController
 {
     private Usuario $usuario;
-    private Pages $pages;
 
     public function __construct()
     {
         $this->usuario = new Usuario();
-        $this->pages = new Pages();
     }
 
     public function getAll(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $usuarios = $this->usuario->getAll();
-            $usuarioArr = [];
 
             if (!empty($usuarios)) {
-                $usuarioArr["message"] = json_decode(ResponseHttp::statusMessage(202, "OK"));
-                $usuarioArr["usuarios"] = [];
-                foreach ($usuarios as $usuario) {
-                    $usuarioArr["usuarios"][] = $usuario;
-                }
+                echo json_encode($usuarios);
             }
             else {
-                $usuarioArr["message"] = json_decode(ResponseHttp::statusMessage(404, "No se encontraron usuarios"));
-                $usuarioArr["usuarios"] = [];
+                echo ResponseHttp::statusMessage(404, "No se encontraron usuarios");
             }
-
-            if ($usuarioArr == []) {
-                $response = json_encode($usuarioArr["message"]);
-            }
-            else {
-                $response = json_encode($usuarioArr);
-            }
-
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido, use GET"));
+            echo ResponseHttp::statusMessage(405, "Método no permitido, use GET");
         }
-        $this->pages->render('read', ['response' => $response]);
     }
 
     public function getUser($id): void
@@ -64,56 +46,53 @@ class ApiUsuarioController
             $usuario = $this->usuario->getUser($id);
 
             if ($usuario !== false) {
-                $response["message"] = json_decode(ResponseHttp::statusMessage(202, "OK"));
-                $response["usuario"] = $usuario;
+                echo json_encode($usuario);
             }
             else {
-                $response["message"] = json_decode(ResponseHttp::statusMessage(404, "No se encontró el usuario"));
+                echo ResponseHttp::statusMessage(404, "No se encontró el usuario");
             }
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido, use GET"));
+            echo ResponseHttp::statusMessage(405, "Método no permitido, use GET");
         }
-
-        $this->pages->render('read', ['response' => json_encode($response)]);
     }
 
     public function register(): void
     {
-        {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                $usuario = new Usuario();
-                $data = json_decode(file_get_contents("php://input"));
-                $valido = $usuario->validarData($data);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $usuario = new Usuario();
+            $data = json_decode(file_get_contents("php://input"));
+            if (!$data->terminos) {
+                echo ResponseHttp::statusMessage(400, "Debe aceptar los términos y condiciones");
+                return;
+            }
+            if ($usuario->getUserByEmail($data->email) !== false) {
+                echo ResponseHttp::statusMessage(400, "El email ya está registrado. Inicie sesión");
+                return;
+            }
+            $valido = $usuario->validarData($data);
+            if ($valido === true) {
+                $usuario->setNombre($data->nombre);
+                $usuario->setApellidos($data->apellidos);
+                $usuario->setEmail($data->email);
+                $usuario->setPassword(password_hash($data->password, PASSWORD_DEFAULT));
+                $usuario->setRol("usuario");
+                $usuario->setConfirmado(false);
 
-                if ($valido === true) {
-                    $usuario->setNombre($data->nombre);
-                    $usuario->setApellidos($data->apellidos);
-                    $usuario->setEmail($data->email);
-                    $usuario->setPassword(password_hash($data->password, PASSWORD_DEFAULT));
-                    $usuario->setRol("usuario");
-                    $usuario->setConfirmado(false);
-
-                    if ($usuario->register()) {
-                        $token = $this->createToken($usuario, $data->email);
-                        $email = new Email($data->email, $token);
-                        $email->sendConfirmation();
-
-                        http_response_code(201);
-                        $response = json_decode(ResponseHttp::statusMessage(201, "Usuario creado correctamente. Confirme su email para poder iniciar sesión"));
-                    } else {
-                        http_response_code(503);
-                        $response = json_decode(ResponseHttp::statusMessage(503, "Error al crear el usuario"));
-                    }
+                $correcto = $usuario->register();
+                if ($correcto === true) {
+                    $token = $this->createToken($usuario, $data->email);
+                    $email = new Email($data->email, $token);
+                    $email->sendConfirmation();
+                    echo ResponseHttp::statusMessage(201, "Usuario creado correctamente. Confirme su email para poder iniciar sesión");
                 } else {
-                    http_response_code(400);
-                    $response = json_decode(ResponseHttp::statusMessage(400, "ERROR. $valido"));
+                    echo ResponseHttp::statusMessage(503, "Error: $correcto");
                 }
             } else {
-                $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido. Use POST"));
+                echo ResponseHttp::statusMessage(400, "ERROR. $valido");
             }
-
-            $this->pages->render('read', ['response' => json_encode($response)]);
+        } else {
+            echo ResponseHttp::statusMessage(405, "Método no permitido. Use POST");
         }
     }
 
@@ -130,9 +109,9 @@ class ApiUsuarioController
                     $hash = $datos["password"];
                     if (password_verify($data->password, $hash)) {
                         $this->createToken($usuario, $data->email);
-                        http_response_code(200);
                         $user = $usuario->getUser($datos["id"]);
                         unset($user["password"]);
+                        $usuario->createSession($user);
                         echo json_encode($user);
                     }
                     else {
@@ -172,17 +151,14 @@ class ApiUsuarioController
             $usuario = new Usuario();
             $usuario->setEmail($decoded->data[0]);
             if ($usuario->checkToken($token) === false) {
-                $response = json_decode(ResponseHttp::statusMessage(401, "Token inválido"));
-                $this->pages->render('read', ['response' => json_encode($response)]);
-                return;
+                echo ResponseHttp::statusMessage(401, "Token inválido");
             }
             $usuario->setConfirmado(true);
             $usuario->confirmarCuenta();
-            $this->pages->render('confirmarCuenta');
+            echo json_encode([$usuario, ResponseHttp::statusMessage(200, "Cuenta confirmada correctamente")]);
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido. Use GET"));
-            $this->pages->render('read', ['response' => json_encode($response)]);
+            echo ResponseHttp::statusMessage(405, "Método no permitido. Use GET");
         }
     }
 

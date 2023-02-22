@@ -30,7 +30,8 @@ class Router {
 
             $param = $match[0];
             $param =preg_replace("/\//",'',$param);
-            if ($param != "login" && $param != "register" && $param != "new" ) {
+            if ($param != "login" && $param != "register" && $param != "new"
+                && $param != "logout" && $param != "perfil" && $param != "inscribir") {
                 $action=preg_replace('/'.$param.'/',':id',$action);
             }
             //$action=preg_replace('/'.$match[0].'/',':id',$action);

@@ -89,11 +89,11 @@ class ApiTallerController
 
                 $data = json_decode(file_get_contents("php://input"));
 
-                if (!empty($data->id_taller) && !empty($data->id_usuario)) {
-                    $taller = $this->taller->getTaller($data->id_taller);
+                if (!empty($data->id_curso) && !empty($data->id_usuario)) {
+                    $taller = $this->taller->getTaller($data->id_curso);
 
                     if ($taller !== false) {
-                        $this->taller->inscribir($data->id_taller, $data->id_usuario);
+                        $this->taller->inscribir($data->id_curso, $data->id_usuario);
                         echo ResponseHttp::statusMessage(201, "Inscripción realizada correctamente");
                     }
                     else {

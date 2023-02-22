@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
 <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" async defer type="module"></script>
+<script src="../../src/scripts/login.js"></script>
 
 <main>
     <section class="pb-4">
@@ -23,39 +24,6 @@
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="login()">Enviar</button>
                     <div id="error"></div>
-                    <script>
-                        function login() {
-                            let email = document.getElementById('email').value;
-                            let password = document.getElementById('password').value;
-                            let data = {
-                                email: email,
-                                password: password
-                            };
-                            let url = 'http://localhost/ProyectoCursos/public/usuarios/login';
-                            let body = JSON.stringify(data);
-                            $.ajax({
-                                url: url,
-                                type: "POST",
-                                dataType: 'json',
-                                data: body,
-                                contentType: 'application/json',
-                                success: function (data) {
-                                    console.log(data);
-                                },
-                                error: function (error) {
-                                    tratarError(error);
-                                }
-                            });
-                        }
-
-                        function tratarError(error) {
-                            error = JSON.parse(error.responseText)
-                            console.log(error);
-                            let errorMsg = $('<p class="text-danger"></p>');
-                            errorMsg.text("ERROR: " + error.message);
-                            $('#error').empty().append(errorMsg);
-                        }
-                    </script>
                 </div>
             </section>
         </div>

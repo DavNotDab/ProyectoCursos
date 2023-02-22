@@ -69,8 +69,10 @@ class Utils {
         }
     }
 
-    public static function validarNombre($nombre) : bool|string {
+    public static function validarNombre($nombre) : true|string {
         try {
+            if ($nombre == "") throw new Exception("El nombre no puede estar vacío");
+
             if (strlen($nombre) < 3) {
                 throw new Exception("El nombre debe ser de al menos 3 caracteres");
             }
@@ -86,8 +88,10 @@ class Utils {
         }
     }
 
-    public static function validarEmail($email) : bool|string {
+    public static function validarEmail($email) : true|string {
         try {
+            if ($email == "") throw new Exception("El email no puede estar vacío");
+
             if (!preg_match("/^[\w.]+@([\w-]+\.)+[\w-]{2,4}$/", $email)) {
                 throw new Exception("Formato de email incorrecto");
             }
@@ -97,12 +101,14 @@ class Utils {
         }
     }
 
-    public static function validarPassword($password) : bool|string {
+    public static function validarPassword($password) : true|string {
         try {
+            if ($password == "") throw new Exception("La contraseña no puede estar vacía");
+
             if (strlen($password) < 8) {
                 throw new Exception("La contraseña debe tener al menos 8 caracteres");
             }
-            if (!preg_match("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_!¿?¡])[a-zA-Z0-9-_!¿?¡]{8,}$/", $password)) {
+            if (!preg_match("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_!¿?¡*+\/#\$&%])[a-zA-Z0-9-_!¿?¡*+\/#\$&%]{8,}$/", $password)) {
                 throw new Exception("La contraseña debe tener mayusculas, minusculas, números y algún caracter entre -_!¿?¡");
             }
             if (strlen($password) > 50) {

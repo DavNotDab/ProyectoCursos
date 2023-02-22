@@ -1,4 +1,13 @@
 
+<?php
+if (!isset($_SESSION)) {
+    session_start();
+}
+if (!isset($_SESSION['user'])) {
+    session_destroy();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,15 +32,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav">
-                    <a href="http://localhost/ProyectoCursos/public/" class="nav-item nav-link active">Home</a>
-                    <a href="http://localhost/ProyectoCursos/public/#cursos" class="nav-item nav-link">Cursos</a>
-                    <a href="http://localhost/ProyectoCursos/public/#talleres" class="nav-item nav-link">Talleres</a>
-                    <a href="http://localhost/ProyectoCursos/public/#ponentes" class="nav-item nav-link">Nuestros Ponentes</a>
-                    <a href="http://localhost/ProyectoCursos/public/#about" class="nav-item nav-link">Acerca de</a>
+                    <a href="<?=$_ENV["BASE_URL"]?>" class="nav-item nav-link active">Home</a>
+                    <a href="<?=$_ENV["BASE_URL"]?>#cursos" class="nav-item nav-link">Cursos</a>
+                    <a href="<?=$_ENV["BASE_URL"]?>#talleres" class="nav-item nav-link">Talleres</a>
+                    <a href="<?=$_ENV["BASE_URL"]?>#ponentes" class="nav-item nav-link">Nuestros Ponentes</a>
+                    <a href="<?=$_ENV["BASE_URL"]?>#about" class="nav-item nav-link">Acerca de</a>
                 </div>
                 <div class="navbar-nav ms-auto">
-                    <a href="http://localhost/ProyectoCursos/public/usuarios/login" class="nav-item nav-link">Inicia Sesi&oacute;n</a>
-                    <a href="http://localhost/ProyectoCursos/public/usuarios/register" class="nav-item nav-link">Reg&iacute;strate</a>
+                    <?php if(isset($_SESSION['user'])): ?>
+                        <a href="<?=$_ENV["BASE_URL"]?>usuarios/perfil" class="nav-item nav-link">Perfil</a>
+                        <a href="<?=$_ENV["BASE_URL"]?>usuarios/logout" class="nav-item nav-link">Cerrar Sesi&oacute;n</a>
+                    <?php else: ?>
+                    <a href="<?=$_ENV["BASE_URL"]?>usuarios/login" class="nav-item nav-link">Inicia Sesi&oacute;n</a>
+                    <a href="<?=$_ENV["BASE_URL"]?>usuarios/register" class="nav-item nav-link">Reg&iacute;strate</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

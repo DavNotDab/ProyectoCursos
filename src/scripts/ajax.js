@@ -1,4 +1,27 @@
 
+
+function inscribirEnCurso(curso, idCurso) {
+    console.log("Inscribiendo en curso " + curso + " con id " + idCurso);
+    $.ajax({
+        url: "http://localhost/ProyectoCursos/public/" + curso + "/inscribir",
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        type: 'POST',
+        contentType: "application/json",
+        dataType: "json",
+        data: JSON.stringify({id_curso: idCurso, id_usuario: localStorage.getItem('idUser')}),
+        success: function (result) {
+            console.log(result);
+            alert("Inscrito correctamente!");
+        },
+        error: function (e) {
+            console.log("ERROR: " + e.message);
+            console.log(this.headers)
+        }
+    })
+}
+
 function buildDataContainers(data, idContainer, elementClass) {
     let dataDivs = $("#" + idContainer);
     $.each(data, function (index, element) {
@@ -13,13 +36,15 @@ function buildDataContainers(data, idContainer, elementClass) {
         let elementItem1 = $("<li class='list-group-item'></li>");
         let elementItem2 = $("<li class='list-group-item'></li>");
         let elementBody2 = $("<div class='card-body'></div>");
-        let elementButton = $("<a href='#' class='btn btn-primary'>Inscr&iacute;bete</a>");
+        let elementButton = $("<button class='btn btn-primary'>Inscr&iacute;bete</button>");
+        elementButton.click(function () {
+            inscribirEnCurso(elementClass, element.id);
+        });
 
         elementTitle.text(element.nombre);
         elementText.text(element.descripcion);
         elementItem1.text("Duración: " + element.horas + " horas");
         elementItem2.text("Ponente: " + element.ponente);
-        elementButton.attr("href", "http://localhost/ProyectoCursos/public/" + elementClass + "/" + element.id);
         elementBody2.append(elementButton);
         elementList.append(elementItem1);
         elementList.append(elementItem2);

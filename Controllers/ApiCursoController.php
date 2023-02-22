@@ -104,7 +104,7 @@ class ApiCursoController
                 }
             }
             else {
-                    echo ResponseHttp::statusMessage(401, "Error. No autorizado");
+                echo ResponseHttp::statusMessage(401, "Error. No autorizado");
             }
         }
         else {

@@ -81,6 +81,19 @@
             </button>
         </div>
     </div>
-    <script src="../src/scripts/ajax.js"></script>
+    <hr class="my-4">
+    <div class="container-fluid" id="about">
+        <div class="row">
+            <div class="col-12">
+                <div class="jumbotron">
+                    <h1 class="display-3">Sobre nosotros...</h1>
+                    <p class="lead">Somos la mejor escuela de hosteler&iacute;a en Espa&ntilde;a. Nuestros alumnos lo aseguran.</p>
+                    <p>Aqu&iacute; encontrar&aacute;s los mejores cursos y talleres de hosteler&iacute;a y pasteler&iacute;a. Impartidos por los mejores chefs y reposteros del mundo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="my-4">
 
+    <script src="../src/scripts/ajax.js"></script>
 </main>
