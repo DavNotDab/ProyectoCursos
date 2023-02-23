@@ -196,17 +196,19 @@ class Usuario
         header("Location: http://localhost/ProyectoCursos/public/");
     }
 
-    public function validarData(object $data): bool
+    public function validarData(object $data): bool|string
     {
         $nombre = Utils::validarNombre($data->nombre);
-        $apellidos = Utils::validarNombre($data->apellidos);
+        $apellidos = Utils::validarApellidos($data->apellidos);
         $email = Utils::validarEmail($data->email);
         $password = Utils::validarPassword($data->password);
 
         if ($nombre === true) {
             if ($apellidos === true) {
                 if ($email === true) {
-                    if ($password === true) return true;
+                    if ($password === true) {
+                        return true;
+                    }
                     else return $password;
                 }
                 else return $email;

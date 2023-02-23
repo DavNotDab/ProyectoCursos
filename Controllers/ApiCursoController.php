@@ -34,7 +34,6 @@ class ApiCursoController
             else {
                 echo ResponseHttp::statusMessage(404, "No se encontraron cursos");
             }
-
         }
         else {
             echo ResponseHttp::statusMessage(405, "Método no permitido, use GET");

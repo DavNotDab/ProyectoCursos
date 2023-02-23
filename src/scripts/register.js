@@ -26,7 +26,7 @@ function register() {
             $('#success').empty().append(successMsg);
             setTimeout(function () {
                 window.location.href = "http://localhost/ProyectoCursos/public/usuarios/login";
-            }, 52000);
+            }, 3000);
         },
         error: function (error) {
             console.log(error);

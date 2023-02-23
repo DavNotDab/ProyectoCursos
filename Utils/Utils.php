@@ -69,15 +69,15 @@ class Utils {
         }
     }
 
-    public static function validarNombre($nombre) : true|string {
+    public static function validarNombre($nombre) : bool|string {
         try {
             if ($nombre == "") throw new Exception("El nombre no puede estar vacío");
 
             if (strlen($nombre) < 3) {
                 throw new Exception("El nombre debe ser de al menos 3 caracteres");
             }
-            if (!preg_match("/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ]*$/", $nombre)) {
-                throw new Exception("El nombre solo puede contener letras y números");
+            if (!preg_match("/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]*$/", $nombre)) {
+                throw new Exception("El nombre solo puede contener letras y espacios");
             }
             if (strlen($nombre) > 50) {
                 throw new Exception("El nombre no puede ser de más de 50 caracteres");
@@ -88,7 +88,26 @@ class Utils {
         }
     }
 
-    public static function validarEmail($email) : true|string {
+    public static function validarApellidos($nombre) : bool|string {
+        try {
+            if ($nombre == "") throw new Exception("Los apellidos no pueden estar vacíos");
+
+            if (strlen($nombre) < 3) {
+                throw new Exception("Los apellidos deben ser de al menos 3 caracteres");
+            }
+            if (!preg_match("/^[a-zA-Z\sáéíóúÁÉÍÓÚñÑ]*$/", $nombre)) {
+                throw new Exception("Los apellidos solo pueden contener letras y espacios");
+            }
+            if (strlen($nombre) > 70) {
+                throw new Exception("Los apellidos no pueden ser de más de 50 caracteres");
+            }
+            return true;
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function validarEmail($email) : bool|string {
         try {
             if ($email == "") throw new Exception("El email no puede estar vacío");
 
@@ -101,7 +120,7 @@ class Utils {
         }
     }
 
-    public static function validarPassword($password) : true|string {
+    public static function validarPassword($password) : bool|string {
         try {
             if ($password == "") throw new Exception("La contraseña no puede estar vacía");
 
@@ -109,7 +128,7 @@ class Utils {
                 throw new Exception("La contraseña debe tener al menos 8 caracteres");
             }
             if (!preg_match("/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[-_!¿?¡*+\/#\$&%])[a-zA-Z0-9-_!¿?¡*+\/#\$&%]{8,}$/", $password)) {
-                throw new Exception("La contraseña debe tener mayusculas, minusculas, números y algún caracter entre -_!¿?¡");
+                throw new Exception("La contraseña debe tener mayusculas, minusculas, números y un caracter especial");
             }
             if (strlen($password) > 50) {
                 throw new Exception("La contraseña no puede ser de más de 50 caracteres");

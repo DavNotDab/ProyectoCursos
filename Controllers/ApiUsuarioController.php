@@ -66,12 +66,13 @@ class ApiUsuarioController
                 echo ResponseHttp::statusMessage(400, "Debe aceptar los términos y condiciones");
                 return;
             }
-            if ($usuario->getUserByEmail($data->email) !== false) {
-                echo ResponseHttp::statusMessage(400, "El email ya está registrado. Inicie sesión");
-                return;
-            }
             $valido = $usuario->validarData($data);
+
             if ($valido === true) {
+                if ($usuario->getUserByEmail($data->email) !== false) {
+                    echo ResponseHttp::statusMessage(400, "El email ya está registrado. Inicie sesión");
+                    return;
+                }
                 $usuario->setNombre($data->nombre);
                 $usuario->setApellidos($data->apellidos);
                 $usuario->setEmail($data->email);
@@ -89,7 +90,7 @@ class ApiUsuarioController
                     echo ResponseHttp::statusMessage(503, "Error: $correcto");
                 }
             } else {
-                echo ResponseHttp::statusMessage(400, "ERROR. $valido");
+                echo ResponseHttp::statusMessage(400, $valido);
             }
         } else {
             echo ResponseHttp::statusMessage(405, "Método no permitido. Use POST");
