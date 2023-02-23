@@ -12,6 +12,8 @@ use Lib\Security;
 use Models\Taller;
 use Models\Usuario;
 
+// Controlador de la api para los talleres.
+// Devuelve los datos de los talleres en formato JSON.
 class ApiTallerController
 {
     private Taller $taller;
@@ -23,6 +25,7 @@ class ApiTallerController
         $this->usuario = new Usuario();
     }
 
+    // Devuelve todos los talleres.
     public function getAll(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -41,6 +44,7 @@ class ApiTallerController
         }
     }
 
+    // Devuelve los datos de un taller dado su id.
     public function getTaller($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -59,6 +63,7 @@ class ApiTallerController
 
     }
 
+    // Borra un taller dado su id.
     public function deleteTaller($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -77,7 +82,8 @@ class ApiTallerController
         }
     }
 
-
+    // Inscribe a un usuario en un taller.
+    // Recibe el id del taller y el id del usuario por JSON.
     public function inscribir(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

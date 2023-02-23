@@ -15,8 +15,8 @@ function login() {
         contentType: 'application/json',
         success: function (data) {
             console.log(data);
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('idUser', data.id);
+            sessionStorage.setItem('token', data.token);
+            sessionStorage.setItem('idUser', data.id);
             window.location.href = "http://localhost/ProyectoCursos/public/";
         },
         error: function (error) {

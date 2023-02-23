@@ -27,6 +27,22 @@
 
     <h1 class="display-6 p-5">Tus cursos:</h1>
 
+    <table class="table table-striped container">
+        <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripci&oacute;n</th>
+            <th scope="col">Horas</th>
+            <th scope="col">Ponente</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+
+        </tr>
+
+        </tbody>
+    </table>
 
 
 </main>

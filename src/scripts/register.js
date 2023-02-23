@@ -23,7 +23,7 @@ function register() {
             console.log(data);
             let successMsg = $('<p class="text-success"></p>');
             successMsg.text(data.message);
-            $('#success').empty().append(successMsg);
+            $('#message').empty().append(successMsg);
             setTimeout(function () {
                 window.location.href = "http://localhost/ProyectoCursos/public/usuarios/login";
             }, 3000);
@@ -40,5 +40,5 @@ function tratarError(error) {
     console.log(error);
     let errorMsg = $('<p class="text-danger"></p>');
     errorMsg.text("ERROR: " + error.message);
-    $('#error').empty().append(errorMsg);
+    $('#message').empty().append(errorMsg);
 }

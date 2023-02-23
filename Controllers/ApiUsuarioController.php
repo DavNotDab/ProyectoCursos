@@ -7,6 +7,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Lib\Email;
@@ -14,6 +15,8 @@ use Lib\ResponseHttp;
 use Lib\Security;
 use Models\Usuario;
 
+// Controlador de la api para los usuarios.
+// Devuelve los datos de los usuarios en formato JSON.
 class ApiUsuarioController
 {
     private Usuario $usuario;
@@ -23,6 +26,7 @@ class ApiUsuarioController
         $this->usuario = new Usuario();
     }
 
+    // Devuelve todos los usuarios.
     public function getAll(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -40,6 +44,7 @@ class ApiUsuarioController
         }
     }
 
+    // Devuelve los datos de un usuario dada su id.
     public function getUser($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -57,6 +62,9 @@ class ApiUsuarioController
         }
     }
 
+    // Registra un usuario en la base de datos.
+    // Recoge los datos desde una petiocion POST.
+    // También envía un correo de confirmación al usuario.
     public function register(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -97,6 +105,10 @@ class ApiUsuarioController
         }
     }
 
+    // Inicia sesión en la aplicación.
+    // Recoge los datos desde una petición POST.
+    // Además, crea un token JWT y lo devuelve en la respuesta.
+    // También crea una sesión de usuario con sus datos.
     public function login(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -133,6 +145,7 @@ class ApiUsuarioController
         }
     }
 
+    // Crea un token JWT y lo devuelve en la respuesta.
     private function createToken($usuario, $email): string
     {
         $key = Security::claveSecreta();
@@ -144,19 +157,33 @@ class ApiUsuarioController
             return $encodedToken;
     }
 
+    // Confirma la cuenta de un usuario.
+    // Recibe el token JWT por parámetro.
+    // Si el token es válido, confirma la cuenta y devuelve un mensaje de confirmación.
     public function confirmarCuenta($token): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $key = Security::claveSecreta();
-            $decoded = JWT::decode($token, new Key($key, 'HS256'));
             $usuario = new Usuario();
-            $usuario->setEmail($decoded->data[0]);
-            if ($usuario->checkToken($token) === false) {
-                echo ResponseHttp::statusMessage(401, "Token inválido");
+            try {
+                $decoded = JWT::decode($token, new Key($key, 'HS256'));
+                $usuario->setEmail($decoded->data[0]);
+                if ($usuario->checkToken($token) === false) {
+                    echo ResponseHttp::statusMessage(401, "Token inválido");
+                }
+                $usuario->setConfirmado(true);
+                $usuario->confirmarCuenta();
+                echo json_encode([$usuario, ResponseHttp::statusMessage(200, "Cuenta confirmada correctamente. Ya puede iniciar sesión")]);
+                header("Refresh:2; url=".$_ENV["BASE_URL"]."usuarios/login");
             }
-            $usuario->setConfirmado(true);
-            $usuario->confirmarCuenta();
-            echo json_encode([$usuario, ResponseHttp::statusMessage(200, "Cuenta confirmada correctamente")]);
+            catch (Exception) {
+                echo ResponseHttp::statusMessage(401, "Token inválido o expirado. Regístrese de nuevo.");
+                $email = JWT::decode($token, new Key($key, 'HS256'), true)->data[0];
+                if ($usuario->getUserByEmail($email) !== false) {
+                    $usuario->deleteUser($email);
+                }
+                header("Refresh:2; url=".$_ENV["BASE_URL"]."usuarios/register");
+            }
         }
         else {
             echo ResponseHttp::statusMessage(405, "Método no permitido. Use GET");

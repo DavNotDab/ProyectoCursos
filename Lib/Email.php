@@ -3,6 +3,8 @@ namespace Lib;
 use Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
+// Clase para enviar correos electrónicos
+// Hace uso de la libreria PHPMailer, con las credenciales de Mailtrap
 class Email
 {
     private string $email;

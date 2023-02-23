@@ -5,6 +5,8 @@ use Lib\BaseDatos;
 use PDOException;
 use MVC\Utils\Utils;
 
+// Modelo de la tabla usuarios
+// Accede a la base de datos para ver, modificar y borrar datos de los usuarios.
 class Usuario
 {
     private string $id;
@@ -136,6 +138,16 @@ class Usuario
         $this->bd->consulta($sql);
         if ($this->bd->filasAfectadas() > 0) {
             return $this->bd->extraer_todos()[0];
+        }
+        return false;
+    }
+
+    public function deleteUser($email): bool {
+        $user = $this->getUserByEmail($email);
+        if ($user["confirmado"] == 1) {
+            $sql = "DELETE FROM usuarios WHERE email = '$email'";
+            $this->bd->consulta($sql);
+            return $this->bd->filasAfectadas() > 0;
         }
         return false;
     }

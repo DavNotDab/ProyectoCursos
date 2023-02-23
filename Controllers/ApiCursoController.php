@@ -12,6 +12,9 @@ use Lib\Security;
 use Models\Curso;
 use Models\Usuario;
 
+
+// Controlador de la api para los cursos.
+// Devuelve los datos de los cursos en formato JSON.
 class ApiCursoController
 {
     private Curso $curso;
@@ -23,6 +26,7 @@ class ApiCursoController
         $this->usuario = new Usuario();
     }
 
+    // Devuelve todos los cursos.
     public function getAll(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -40,6 +44,7 @@ class ApiCursoController
         }
     }
 
+    // Devuelve los datos de un curso dada su id.
     public function getCurso($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -58,6 +63,7 @@ class ApiCursoController
 
     }
 
+    // Borra un curso dada su id.
     public function deleteCurso($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -76,6 +82,8 @@ class ApiCursoController
         }
     }
 
+    // Inscribe a un usuario en un curso.
+    // Recibe el id del curso y del usuario en formato JSON.
     public function inscribir(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

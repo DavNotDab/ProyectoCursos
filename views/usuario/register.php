@@ -37,8 +37,7 @@
                         <label class="form-check-label" for="terminos">Acepto los t&eacute;rminos</label>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="register()">Enviar</button>
-                    <div id="error"></div>
-                    <div id="success"></div>
+                    <div id="message"></div>
                 </div>
             </section>
         </div>

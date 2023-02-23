@@ -5,6 +5,8 @@ use Lib\BaseDatos;
 use PDOException;
 use MVC\Utils\Utils;
 
+// Modelo de la tabla ponentes
+// Accede a la base de datos para ver, modificar y borrar datos de los ponentes.
 class Ponente
 {
     private string $id;

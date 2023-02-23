@@ -9,7 +9,6 @@ class CursoController
 
     public function __construct() {
         $this->pages = new Pages();
-
     }
 
     public function index(): void {
@@ -21,7 +20,13 @@ class CursoController
     }
 
     public function inscribir(): void {
-        (new ApiCursoController())->inscribir();
+        session_start();
+        if (isset($_SESSION['user'])) {
+            (new ApiCursoController())->inscribir();
+        }
+        else {
+            $this->pages->render('usuarios/login');
+        }
     }
 
 }

@@ -11,6 +11,8 @@ use Lib\ResponseHttp;
 use Models\Ponente;
 use Lib\Pages;
 
+// Controlador de la api para los ponentes.
+// Devuelve los datos de los ponentes en formato JSON.
 class ApiPonenteController
 {
     private Ponente $ponente;
@@ -22,6 +24,7 @@ class ApiPonenteController
         $this->pages = new Pages();
     }
 
+    // Devuelve todos los ponentes.
     public function getAll(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -39,6 +42,7 @@ class ApiPonenteController
         }
     }
 
+    // Devuelve los datos de un ponente dada su id.
     public function getPonente($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -57,6 +61,7 @@ class ApiPonenteController
 
     }
 
+    // Borra un ponente dada su id.
     public function deletePonente($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
@@ -77,6 +82,8 @@ class ApiPonenteController
         $this->pages->render('read', ['response' => json_encode($response)]);
     }
 
+    // Crea un nuevo ponente.
+    // Recibe los datos del ponente en formato JSON.
     public function newPonente(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -112,6 +119,8 @@ class ApiPonenteController
         $this->pages->render('read', ['response' => json_encode($response)]);
     }
 
+    // Actualiza los datos de un ponente dados su id
+    // Recibe los datos nuevos en formato JSON.
     public function updatePonente($id): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
@@ -130,29 +139,24 @@ class ApiPonenteController
                     $ponente->setRedes($data->redes);
 
                     if ($ponente->updatePonente($id)) {
-                        http_response_code(201);
-                        $response = json_decode(ResponseHttp::statusMessage(201, "Ponente actualizado correctamente"));
+                        echo ResponseHttp::statusMessage(201, "Ponente actualizado correctamente");
                     }
                     else {
-                        http_response_code(503);
-                        $response = json_decode(ResponseHttp::statusMessage(503, "Error al actualizar el ponente"));
+                        echo ResponseHttp::statusMessage(503, "Error al actualizar el ponente");
                     }
                 }
                 else {
-                    http_response_code(400);
-                    $response = json_decode(ResponseHttp::statusMessage(400, "ERROR. $valido"));
+                    echo ResponseHttp::statusMessage(400, "ERROR. $valido");
                 }
             }
             else {
                 http_response_code(404);
-                $response = json_decode(ResponseHttp::statusMessage(404, "Error. No se encontró el ponente"));
+                echo ResponseHttp::statusMessage(404, "Error. No se encontró el ponente");
             }
         }
         else {
-            $response = json_decode(ResponseHttp::statusMessage(405, "Método no permitido. Use PUT"));
+            echo ResponseHttp::statusMessage(405, "Método no permitido. Use PUT");
         }
-
-        $this->pages->render('read', ['response' => json_encode($response)]);
     }
 
 }

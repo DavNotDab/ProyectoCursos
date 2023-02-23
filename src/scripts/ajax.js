@@ -1,11 +1,14 @@
 
 
 function inscribirEnCurso(curso, idCurso) {
-    console.log("Inscribiendo en curso " + curso + " con id " + idCurso);
+    if (sessionStorage.getItem('token') === null) {
+        window.location.href = "http://localhost/ProyectoCursos/public/usuarios/login";
+        return;
+    }
     $.ajax({
         url: "http://localhost/ProyectoCursos/public/" + curso + "/inscribir",
         headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
+            'Authorization': 'Bearer ' + sessionStorage.getItem('token')
         },
         type: 'POST',
         contentType: "application/json",
@@ -13,11 +16,11 @@ function inscribirEnCurso(curso, idCurso) {
         data: JSON.stringify({id_curso: idCurso, id_usuario: localStorage.getItem('idUser')}),
         success: function (result) {
             console.log(result);
+            console.log("Inscribiendo en curso " + curso + " con id " + idCurso);
             alert("Inscrito correctamente!");
         },
         error: function (e) {
             console.log("ERROR: " + e.message);
-            console.log(this.headers)
         }
     })
 }
